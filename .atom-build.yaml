@@ -1,0 +1,20 @@
+cmd: java
+name: run
+args:
+    - LanderDash
+targets:
+    build jar:
+        name: Run test
+        cmd: jar
+        args:
+            - cfe
+            - LanderDash.jar
+            - LanderDash
+            - "*.class"
+            - "DatagramPanel.class"
+            - "*.png"
+    run jar:
+        cmd: java
+        args:
+            - -jar
+            - LanderDash.jar
