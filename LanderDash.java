@@ -12,7 +12,7 @@ public class LanderDash extends JFrame implements Runnable {
     public static void main ( String[] args ) throws UnknownHostException {
         SwingUtilities.invokeLater( new Runnable() {
             public void run() {
-                new LanderDash();
+                new LanderDash(args[0], Integer.parseInt(args[1]));
             }
         });
     }
@@ -21,6 +21,7 @@ public class LanderDash extends JFrame implements Runnable {
     /* TODO  Declare some variables to hold Information
         from the game controller to display
     */
+    private InetSocketAddress address;
 
     /* TODO Declare pannels to display Information
     */
@@ -29,14 +30,15 @@ public class LanderDash extends JFrame implements Runnable {
     DatagramPanel connection = new DatagramPanel();
 
 
-    public LanderDash(){
+    public LanderDash(String ip, int port){
         super("Lunar Lander Dashboard");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
         getContentPane().setLayout(
             new BoxLayout(getContentPane(),BoxLayout.Y_AXIS) );
 
         /* TODO add pannels to window */
+        address = new InetSocketAddress(ip, port);
+        connection.setAddress(address);
         add( connection ) ;
 
         pack();
@@ -46,12 +48,8 @@ public class LanderDash extends JFrame implements Runnable {
 
     public void run(){
         try {
-            InetAddress addr = InetAddress.getLocalHost();
-            int portno = 65250;
-            DatagramSocket socket = new DatagramSocket(portno, addr);
-            connection.setAddress((InetSocketAddress)socket.getLocalSocketAddress());
+            DatagramSocket socket = new DatagramSocket(address);
             while(true){
-
                 /* set up socket for reception */
                 if(socket!=null){
                 /* start with fresh datagram packet */
@@ -68,11 +66,10 @@ public class LanderDash extends JFrame implements Runnable {
                         protocol
                     */
                     String[] lines = message.trim().split("\n");
-                    for(String l : lines){
+                    for(String l : lines) {
                         String[] pair = l.split(":");
                         /* TODO act on key value pairs,
                             setting properties to display */
-                        }
                     }
                 }
                 try{Thread.sleep(100);}catch(InterruptedException e){}
